@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>랜덤 숫자 통계</title>
+</head>
+<body>
+    <h1>랜덤 숫자 통계</h1>
+    <ul>
+        {% for number in numbers %}
+            <li>{{ number.number }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">홈으로</a>
+</body>
+</html>
