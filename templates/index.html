@@ -7,6 +7,104 @@
     <title>랜덤 숫자 생성기</title>
 </head>
 <body>
-    <h1>랜덤 숫자 생성기: {{ number }}</h1>
+    <h1>랜덤 숫자 생성기</h1>
+    <form action="/random-number/" method="post">
+        <button type="submit">랜덤 숫자 생성</button>
+    </form>
+
+    <h2>최근 저장된 랜덤 숫자</h2>
+    {% if recent_random_number %}
+        <p>ID: {{ recent_random_number.id }}, 숫자: {{ recent_random_number.number }}</p>
+    {% else %}
+        <p>저장된 랜덤 숫자가 없습니다.</p>
+    {% endif %}
+
+    <h2>랜덤 숫자 수정</h2>
+    <form id="update-form" action="#" method="post">
+        <label for="number_id">숫자 선택:</label>
+        <select id="number_id" name="number_id" required>
+            <option value="" disabled selected>숫자 선택</option>
+            {% for random in random_numbers %}
+                <option value="{{ random.id }}">ID: {{ random.id }}, 숫자: {{ random.number }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="update-button">수정하기</button>
+    </form>
+
+    <h2>랜덤 숫자 삭제</h2>
+    <form id="delete-form" action="#" method="post">
+        <label for="number_id">삭제할 숫자 선택:</label>
+        <select id="number_id" name="number_id" required>
+            <option value="" disabled selected>숫자 선택</option>
+            {% for random in random_numbers %}
+                <option value="{{ random.id }}">ID: {{ random.id }}, 숫자: {{ random.number }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" id="delete-button">삭제하기</button>
+    </form>
+
+    <script>
+        // 수정
+        document.getElementById('update-button').addEventListener('click', function(event) {
+            event.preventDefault();  // 폼 기본 제출 막기
+            const numberId = document.getElementById('number_id').value;
+        
+            if (!numberId) {
+                alert("수정할 숫자를 선택하세요.");
+                return;
+            }
+        
+            fetch(`/random-number/${numberId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("랜덤 숫자가 수정되었습니다!");
+                    window.location.reload();  // 페이지 새로고침
+                } else {
+                    alert("랜덤 숫자를 찾을 수 없습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+                alert("랜덤 숫자 수정 중 오류가 발생했습니다.");
+            });
+        });
+    
+        // 삭제
+        document.getElementById('delete-button').addEventListener('click', function(event) {
+            event.preventDefault();  // 폼 기본 제출 막기
+            const numberId = document.getElementById('number_id').value;
+    
+            if (!numberId) {
+                alert("삭제할 숫자를 선택하세요.");
+                return;
+            }
+    
+            fetch(`/random-number/${numberId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("랜덤 숫자가 삭제되었습니다!");
+                    window.location.reload();  // 페이지 새로고침
+                } else {
+                    alert("랜덤 숫자를 찾을 수 없습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+                alert("랜덤 숫자 삭제 중 오류가 발생했습니다.");
+            });
+        });
+    </script>
+    
+    
 </body>
 </html>
